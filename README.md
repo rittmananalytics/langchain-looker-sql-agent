@@ -79,7 +79,7 @@ Note that tool was developed and tested using JupyterLab 3 running as a managed 
     wget https://github.com/looker-open-source/calcite-avatica/releases/download/avatica-1.26.0-looker/avatica-1.26.0-looker.jar
     ```
 
- 6.  **Configure Environment Variables:**
+6.  **Configure Environment Variables:**
     ```bash
     cd ..
     cp .env.example .env
