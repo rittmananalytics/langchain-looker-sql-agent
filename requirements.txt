@@ -1,0 +1,18 @@
+# LangChain Core and Community
+langchain>=0.1.0,<0.2.0
+langchain-core>=0.1.0,<0.2.0
+langchain-community>=0.0.20,<0.1.0
+
+# LLM Provider (Example: OpenAI)
+langchain-openai>=0.1.0,<0.2.0
+openai>=1.0.0,<2.0.0 # Often a peer dependency for langchain-openai
+
+# JDBC Bridge
+jaydebeapi>=1.2.3
+JPype1>=1.4.0 # Crucial dependency for JayDeBeApi
+
+# Environment Variable Management
+python-dotenv>=1.0.0
+
+# Notebook Specific (Optional, but good for running the example notebooks)
+ipywidgets>=7.0.0,<9.0.0
