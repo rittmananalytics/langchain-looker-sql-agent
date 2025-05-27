@@ -54,6 +54,7 @@ Note that tool was developed and tested using JupyterLab 3 running as a managed 
     *   Click on "+ NEW NOTEBOOK" or "CREATE NEW".
     *   Give your notebook a descriptive name, e.g., looker-agent-dev-instance or langchain-looker-sql-notebook
     *   Select an environment. A good starting point is "Python 3 (with Intel® MKL)" or a similar standard Python 3 environment. Ensure it's Python 3.8 or newer.
+    *   Using the Launcher, start a new Terminal session
 
 2.  **Clone the Repository:**
     ```bash
@@ -61,42 +62,37 @@ Note that tool was developed and tested using JupyterLab 3 running as a managed 
     cd langchain-looker-sql-agent
     ```
 
-3.  **Create and Activate a Virtual Environment:**
+3.  **Install Java **
     ```bash
-    python3 -m venv venv
-    source venv/bin/activate  # Linux/macOS
-    # venv\Scripts\activate    # Windows
+    sudo apt-get update && sudo apt-get install -y openjdk-11-jdk --no-install-recommends
     ```
 
-4.  **Install Java (if needed):**
-    *   On Debian/Ubuntu: `sudo apt-get update && sudo apt-get install -y openjdk-11-jdk --no-install-recommends`
-    *   Verify with `java -version`.
-    *   Ensure `JAVA_HOME` is correctly set (e.g., to `/usr/lib/jvm/java-11-openjdk-amd64`). The notebook attempts to verify this for common Linux paths.
-
-5.  **Install Python Dependencies:**
+4.  **Install Python Dependencies:**
     ```bash
     pip install -r requirements.txt
     ```
 
-6.  **Place the Looker JDBC Driver:**
-    *   Create a `drivers/` directory in your project root (e.g., `looker-langchain-sql-agent/drivers/`).
-    *   Place your downloaded `avatica-<version>-looker.jar` file into this `drivers/` directory.
+5.  **Download + Place the Looker JDBC Driver:**
+    ```bash
+    mkdir drivers
+    cd drivers
+    wget https://github.com/looker-open-source/calcite-avatica/releases/download/avatica-1.26.0-looker/avatica-1.26.0-looker.jar
+    ```
 
- 7.  **Configure Environment Variables:**
-    *   Copy `.env.example` to `.env`: `cp .env.example .env`
-    *   **Edit `.env`** with your actual credentials and paths:
-        ```env
-        OPENAI_API_KEY="sk-YOUR_OPENAI_API_KEY_HERE"
+ 6.  **Configure Environment Variables:**
+    ```bash
+    cd ..
+    cp .env.example .env
+    vi .env
+    OPENAI_API_KEY="sk-YOUR_OPENAI_API_KEY_HERE"
+    LOOKER_INSTANCE_URL="https://yourcompany.cloud.looker.com"
+    LOOKML_MODEL_NAME="your_lookml_model_name" # e.g., analytics
+    LOOKER_CLIENT_ID="YOUR_LOOKER_API3_CLIENT_ID"
+    LOOKER_CLIENT_SECRET="YOUR_LOOKER_API3_CLIENT_SECRET"
+    LOOKER_JDBC_DRIVER_PATH="./drivers/avatica-1.24.0-looker.jar" # ADJUST VERSION
+    JAVA_HOME=""
+    ```
 
-        LOOKER_INSTANCE_URL="https://yourcompany.cloud.looker.com"
-        LOOKML_MODEL_NAME="your_lookml_model_name" # e.g., analytics
-        LOOKER_CLIENT_ID="YOUR_LOOKER_API3_CLIENT_ID"
-        LOOKER_CLIENT_SECRET="YOUR_LOOKER_API3_CLIENT_SECRET"
-        # Path to the JDBC driver relative to the project root, or an absolute path
-        LOOKER_JDBC_DRIVER_PATH="./drivers/avatica-1.24.0-looker.jar" # ADJUST VERSION
-        ```
-    *   **CRITICAL:** `LOOKER_JDBC_DRIVER_PATH` must be correct.
-    *   
 ## How to Run Tests and Demonstrate Functionality
 
 The primary way to test and demonstrate this agent is via the Jupyter Notebook:
