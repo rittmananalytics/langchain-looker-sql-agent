@@ -50,3 +50,10 @@ Repository = "https://github.com/rittmananalytics/looker-langchain-sql-agent" # 
 # where = ["src"]  # Look in the 'src' directory
 # include = ["langchain_looker_agent*"]
 # exclude = ["tests*"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["langchain_looker_agent*"]
