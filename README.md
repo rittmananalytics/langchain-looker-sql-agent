@@ -80,6 +80,7 @@ Note that tool was developed and tested using JupyterLab 3 running as a managed 
     *   Verify `JAVA_HOME` is correctly set in your terminal session *before proceeding*. The agent will not work without it.
 4.  **Install Python Dependencies:**
     ```bash
+    pip install --upgrade pip setuptools wheel
     pip install -r requirements.txt
 5.  **Download + Place the Looker JDBC Driver:**
     ```bash
@@ -98,8 +99,8 @@ Note that tool was developed and tested using JupyterLab 3 running as a managed 
     LOOKML_MODEL_NAME="your_lookml_model_name" # e.g., analytics
     LOOKER_CLIENT_ID="YOUR_LOOKER_API3_CLIENT_ID"
     LOOKER_CLIENT_SECRET="YOUR_LOOKER_API3_CLIENT_SECRET"
-    LOOKER_JDBC_DRIVER_PATH="./drivers/avatica-1.24.0-looker.jar" # ADJUST VERSION
-    JAVA_HOME=""
+    LOOKER_JDBC_DRIVER_PATH="drivers/avatica-1.26.0-looker.jar" # ADJUST VERSION
+    JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
     ```
 
 ## How to Run Tests and Demonstrate Functionality
@@ -114,7 +115,7 @@ The primary way to test and demonstrate this agent is via the Jupyter Notebook:
     ```bash
     jupyter lab  # or jupyter notebook
     ```
-4.  Navigate to and open `notebooks/looker_langchain_sql_agent_tests.ipynb`.
+4.  Navigate to and open `examples/looker_langchain_sql_agent_tests.ipynb`.
 5.  **Run the cells sequentially.** The notebook is structured to:
     *   Perform initial environment checks and load configurations.
     *   Initialize the `LookerSQLDatabase` component.

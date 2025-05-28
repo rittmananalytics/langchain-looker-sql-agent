@@ -3,7 +3,6 @@
 [build-system]
 requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
-backend-path = "." # Optional: often not needed with modern setuptools
 
 [project]
 name = "langchain-looker-agent" # How it will be named on PyPI if published
