@@ -1,0 +1,53 @@
+# looker-langchain-sql-agent/pyproject.toml
+
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+backend-path = "." # Optional: often not needed with modern setuptools
+
+[project]
+name = "langchain-looker-agent" # How it will be named on PyPI if published
+version = "0.1.0" # Initial version
+authors = [
+  { name="Mark Rittman", email="mark.rittman@rittmananalytics.com" }, # Replace with your details
+]
+description = "A LangChain SQL agent for querying Looker via its Open SQL Interface (JDBC/Avatica)."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text="Apache-2.0" } # 
+keywords = ["langchain", "looker", "sql", "agent", "llm", "conversational bi", "jdbc", "avatica"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License", # Match your chosen license
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Database :: Front-Ends",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+dependencies = [
+    "langchain-core>=0.1.52", # Match your working version or set a compatible range
+    "langchain-community>=0.0.38", # Match your working version
+    "langchain>=0.1.20", # For agents, etc.
+    "jaydebeapi>=1.2.3",
+    "JPype1>=1.4.0",
+    # Note: langchain-openai is not a direct dependency of the library itself,
+    # but of the example notebooks. It will go in requirements.txt for examples.
+]
+
+[project.urls]
+Homepage = "https://github.com/rittmananalytics/looker-langchain-sql-agent" # Replace
+Repository = "https://github.com/rittmananalytics/looker-langchain-sql-agent" # Replace
+# Bug Tracker = "https://github.com/rittmananalytics/looker-langchain-sql-agent/issues" # Replace
+
+# If you need to specify where setuptools should find your packages
+# (often not needed if package_dir is not used in setup.cfg and src layout is standard)
+# [tool.setuptools.packages.find]
+# where = ["src"]  # Look in the 'src' directory
+# include = ["langchain_looker_agent*"]
+# exclude = ["tests*"]

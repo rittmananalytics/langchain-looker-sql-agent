@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+*.sqlite3
+*.db
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+src/*.egg-info/ # For src-layout
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+looker_agent_env/ # Or your specific venv name
+*.env
+env.bak
+venv.bak
+pip-freeze.txt # Common for temp freeze
+pip-selfcheck.json
+
+# IDE / Editor
+.vscode/
+.idea/
+*.project
+*.swp
+*.swo
+nbproject/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Test related
+.coverage
+.pytest_cache/
+htmlcov/
+.tox/
+.nox/
+
+# Distribution
+*.manifest
+*.spec
+
+# Logs
+*.log
+logs/
+
+# Looker JDBC Driver JAR (users should download this themselves)
+# Comment out if you *intend* to commit it, but generally not recommended.
+# drivers/*.jar
+# avatica-*-looker.jar
+# looker-jdbc.jar
