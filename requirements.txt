@@ -1,16 +1,17 @@
-# Core LangChain components
-langchain>=0.1.20,<0.2.0       # Pin to the version you know works, or a close compatible range
-langchain-core>=0.1.52,<0.2.0   # Pin to the version you know works, or a close compatible range
-langchain-community>=0.0.38,<0.1.0 # Pin to the version you know works, or a close compatible range
+# For installing the local package in editable mode
+-e .
 
-# LLM Provider (for examples)
-langchain-openai>=0.1.0,<0.2.0 
-
-# JDBC Bridge
-JayDeBeApi>=1.2.3
-JPype1>=1.4.0 
-
-# Utilities for examples/notebooks
+# Dependencies for running example notebooks and development
+langchain-openai>=0.1.0 # Or your specific LLM provider package and version
 python-dotenv>=1.0.0
-ipywidgets 
-tabulate 
+ipywidgets>=7.0.0      # For Jupyter notebook interactivity
+tabulate>=0.8.0        # For pretty-printing tables, if used in notebooks
+jupyterlab             # Or 'notebook' if you prefer that
+
+# For testing (will be used in Phase 3)
+pytest>=7.0.0
+pytest-mock>=3.0.0
+
+# Optional: for linting/formatting
+# black
+# flake8

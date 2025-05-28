@@ -29,8 +29,34 @@ A [LangChain SQL agent](https://blog.langchain.dev/how-to-safely-query-enterpris
 
 ## Prerequisites
 
+## Prerequisites
+
+Before you begin, ensure you have the following:
+
 1.  **Python:** Version 3.8 or newer.
-2.  **Java Runtime Environment (JRE) or Development Kit (JDK):** Version 11 or newer is recommended.
+2.  **Java Runtime Environment (JRE) or Development Kit (JDK):**
+    *   **Version 11 or newer is recommended.** This is required by the `JayDeBeApi` library to interact with the JDBC driver.
+    *   **Installation:**
+        *   **For Debian/Ubuntu-based systems (like many cloud VMs, including Vertex AI Notebooks):**
+            ```bash
+            sudo apt-get update
+            sudo apt-get install -y openjdk-11-jdk --no-install-recommends
+            java -version # Verify installation
+            ```
+        *   **For macOS (using Homebrew):**
+            ```bash
+            brew install openjdk@11
+            # You might need to symlink it or set JAVA_HOME, e.g.:
+            # sudo ln -sfn /usr/local/opt/openjdk@11/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-11.jdk
+            # echo 'export JAVA_HOME="/usr/local/opt/openjdk@11/libexec/openjdk.jdk/Contents/Home"' >> ~/.zshrc # or ~/.bash_profile
+            # source ~/.zshrc
+            java -version
+            ```
+        *   **For Windows:** Download an OpenJDK 11 (or newer) installer (e.g., from Adoptium/Eclipse Temurin, Azul Zulu, Amazon Corretto) and follow its installation instructions.
+    *   **`JAVA_HOME` Environment Variable:** Ensure the `JAVA_HOME` environment variable is set correctly to point to the root directory of your JDK/JRE installation.
+        *   The example notebooks include Python code to attempt to verify/set this for common Linux paths, but you might need to set it manually in your system environment or shell profile (`.bashrc`, `.zshrc`, `.bash_profile`, or System Environment Variables on Windows).
+        *   Example Linux: `export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64`
+        *   Example macOS (after Homebrew): `export JAVA_HOME=$(/usr/libexec/java_home -v 11)` or the path shown by `brew info openjdk@11`.
 3.  **Looker Instance:**
     *   Access to a Looker instance with the SQL Interface (JDBC) enabled.
     *   Your Looker Instance URL (e.g., `https://yourcompany.cloud.looker.com`).
@@ -47,31 +73,15 @@ A [LangChain SQL agent](https://blog.langchain.dev/how-to-safely-query-enterpris
 
 Note that tool was developed and tested using JupyterLab 3 running as a managed instance on Vertex AI Workbench, and has not been tested running directly on a Mac, Windows etc.
 
-1.  **Create JupyterLab 3 managed instance (optional)**
-    *   Open the Google Cloud Console: https://console.cloud.google.com/
-    *   In the navigation menu (☰), go to Vertex AI > Workbench.
-    *   Ensure you are on the "Instances" tab.
-    *   Click on "+ NEW NOTEBOOK" or "CREATE NEW".
-    *   Give your notebook a descriptive name, e.g., looker-agent-dev-instance or langchain-looker-sql-notebook
-    *   Select an environment. A good starting point is "Python 3 (with Intel® MKL)" or a similar standard Python 3 environment. Ensure it's Python 3.8 or newer.
-    *   Using the Launcher, start a new Terminal session
-
-2.  **Clone the Repository:**
-    ```bash
-    git clone https://github.com/rittmananalytics/langchain-looker-sql-agent.git 
-    cd langchain-looker-sql-agent
-    ```
-
-3.  **Install Java **
-    ```bash
-    sudo apt-get update && sudo apt-get install -y openjdk-11-jdk --no-install-recommends
-    ```
-
+1.  **Clone the Repository...**
+2.  **Create and Activate a Virtual Environment...**
+3.  **Verify/Install Java and Set `JAVA_HOME`:**
+    *   Ensure you have a compatible JDK/JRE (see Prerequisites).
+    *   Verify `JAVA_HOME` is correctly set in your terminal session *before proceeding*. The agent will not work without it.
 4.  **Install Python Dependencies:**
     ```bash
+    pip install --upgrade pip setuptools wheel
     pip install -r requirements.txt
-    ```
-
 5.  **Download + Place the Looker JDBC Driver:**
     ```bash
     mkdir drivers
@@ -89,8 +99,8 @@ Note that tool was developed and tested using JupyterLab 3 running as a managed 
     LOOKML_MODEL_NAME="your_lookml_model_name" # e.g., analytics
     LOOKER_CLIENT_ID="YOUR_LOOKER_API3_CLIENT_ID"
     LOOKER_CLIENT_SECRET="YOUR_LOOKER_API3_CLIENT_SECRET"
-    LOOKER_JDBC_DRIVER_PATH="./drivers/avatica-1.24.0-looker.jar" # ADJUST VERSION
-    JAVA_HOME=""
+    LOOKER_JDBC_DRIVER_PATH="drivers/avatica-1.26.0-looker.jar" # ADJUST VERSION
+    JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
     ```
 
 ## How to Run Tests and Demonstrate Functionality
@@ -105,7 +115,7 @@ The primary way to test and demonstrate this agent is via the Jupyter Notebook:
     ```bash
     jupyter lab  # or jupyter notebook
     ```
-4.  Navigate to and open `notebooks/looker_langchain_sql_agent_tests.ipynb`.
+4.  Navigate to and open `examples/looker_langchain_sql_agent_tests.ipynb`.
 5.  **Run the cells sequentially.** The notebook is structured to:
     *   Perform initial environment checks and load configurations.
     *   Initialize the `LookerSQLDatabase` component.
