@@ -19,6 +19,7 @@ src/*.egg-info/ # For src-layout
 .venv
 env/
 venv/
+lla-build/
 ENV/
 looker_agent_env/ # Or your specific venv name
 *.env
