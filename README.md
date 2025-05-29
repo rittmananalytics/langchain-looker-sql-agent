@@ -69,14 +69,14 @@ This example shows how to use the `langchain-looker-agent` library in your own P
 
 This repository includes a Jupyter Notebook to demonstrate setup, testing, and conversational use.
 
-*   **For detailed setup instructions for running the example notebooks (including Java, Python environment, and JDBC driver placement), please see: [EXAMPLES_SETUP.md](https://github.com/rittmananalytics/langchain-looker-sql-agent/EXAMPLES_SETUP.md)**
+*   **For detailed setup instructions for running the example notebooks (including Java, Python environment, and JDBC driver placement), please see: [EXAMPLES_SETUP.md](https://github.com/rittmananalytics/langchain-looker-sql-agent/blob/main/EXAMPLES_SETUP.md)**
 *   **Notebooks available:**
     *   `examples/looker_langchain_sql_agent_tests.ipynb`: Thorough tests of all components.
 
 ## Technical Details
 
 For a deeper dive into the implementation, JDBC interaction, specific Looker SQL syntax handled, and design choices (like why a custom `LookerSQLDatabase` wrapper was used over a new SQLAlchemy dialect), please refer to:
-*   **[TECHNICAL_DETAILS.md](https://github.com/rittmananalytics/langchain-looker-sql-agent/TECHNICAL_DETAILS.md)**
+*   **[TECHNICAL_DETAILS.md](https://github.com/rittmananalytics/langchain-looker-sql-agent/blob/main/TECHNICAL_DETAILS.md)**
 
 ## Core Python Module
 
@@ -87,11 +87,11 @@ The main logic is encapsulated in the `langchain_looker_agent` package, primaril
 
 ## Troubleshooting
 
-Common issues and solutions are discussed in the [EXAMPLES_SETUP.md](https://github.com/rittmananalytics/langchain-looker-sql-agent/EXAMPLES_SETUP.md) and [TECHNICAL_DETAILS.md](https://github.com/rittmananalytics/langchain-looker-sql-agent/TECHNICAL_DETAILS.md). Key areas include:
+Common issues and solutions are discussed in the [EXAMPLES_SETUP.md](https://github.com/rittmananalytics/langchain-looker-sql-agent/blob/main/EXAMPLES_SETUP.md) and [TECHNICAL_DETAILS.md](https://github.com/rittmananalytics/langchain-looker-sql-agent/blob/main/TECHNICAL_DETAILS.md). Key areas include:
 *   `JAVA_HOME` configuration.
 *   Correct path to the Looker JDBC driver JAR.
 *   Looker credentials and permissions for the SQL Interface.
 *   Python package import errors (ensure `pip install -e .` or package installation).
 
 ## License
-This project is licensed under the Apache 2.0 License. See the [LICENSE](./LICENSE) file for details.
+This project is licensed under the Apache 2.0 License. See the [LICENSE](https://github.com/rittmananalytics/langchain-looker-sql-agent/blob/main/LICENSE) file for details.
