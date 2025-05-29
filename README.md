@@ -67,9 +67,9 @@ This example shows how to use the `langchain-looker-agent` library in your own P
 
 ## Running the Example Notebooks
 
-This repository includes detailed Jupyter Notebooks to demonstrate setup, testing, and conversational use.
+This repository includes a Jupyter Notebook to demonstrate setup, testing, and conversational use.
 
-*   **For detailed setup instructions for running the example notebooks (including Java, Python environment, and JDBC driver placement), please see: [EXAMPLES_SETUP.md](./EXAMPLES_SETUP.md)**
+*   **For detailed setup instructions for running the example notebooks (including Java, Python environment, and JDBC driver placement), please see: [EXAMPLES_SETUP.md](https://github.com/rittmananalytics/langchain-looker-sql-agent/EXAMPLES_SETUP.md)**
 *   **Notebooks available:**
     *   `examples/looker_langchain_sql_agent_tests.ipynb`: Thorough tests of all components.
 
