@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "langchain-looker-agent" 
-version = "0.1.0" 
+version = "0.1.1" 
 authors = [
   { name="Mark Rittman", email="mark.rittman@rittmananalytics.com" }, 
 ]
@@ -16,7 +16,7 @@ requires-python = ">=3.8"
 license = { text="Apache-2.0" } # 
 keywords = ["langchain", "looker", "sql", "agent", "llm", "conversational bi", "jdbc", "avatica"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 2 - Beta",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: Apache Software License", 
     "Programming Language :: Python :: 3",
@@ -40,6 +40,6 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/rittmananalytics/looker-langchain-sql-agent" 
-Repository = "https://github.com/rittmananalytics/looker-langchain-sql-agent" 
-Issues = "https://github.com/rittmananalytics/looker-langchain-sql-agent/issues" 
+Homepage = "https://github.com/rittmananalytics/langchain-looker-sql-agent" 
+Repository = "https://github.com/rittmananalytics/langchain-looker-sql-agent.git" 
+Issues = "https://github.com/rittmananalytics/langchain-looker-sql-agent/issues" 
