@@ -5,7 +5,6 @@
 This project provides a Python package, `langchain-looker-agent`, that allows you to build LangChain agents capable of interacting with your Looker data via its Avatica JDBC driver. Ask questions in natural language, and the agent will translate them into Looker-specific SQL, execute them, and provide answers based on your curated LookML models.
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-<!-- Add other badges if you like: PyPI version, build status etc. -->
 
 ## Key Features
 
@@ -24,8 +23,7 @@ This example shows how to use the `langchain-looker-agent` library in your own P
     ```bash
     pip install langchain-looker-agent 
     ```
-    *(Note: This assumes the package will be published to PyPI. For local development, see "Development Setup" below).*
-
+    
 2.  **Set Environment Variables:**
     Ensure the following are set in your environment or a `.env` file (see `.env.example`):
     *   `OPENAI_API_KEY` (or your chosen LLM's API key)
@@ -73,8 +71,7 @@ This repository includes detailed Jupyter Notebooks to demonstrate setup, testin
 
 *   **For detailed setup instructions for running the example notebooks (including Java, Python environment, and JDBC driver placement), please see: [EXAMPLES_SETUP.md](./EXAMPLES_SETUP.md)**
 *   **Notebooks available:**
-    *   `notebooks/00_comprehensive_agent_tests.ipynb`: Thorough tests of all components.
-    *   `notebooks/01_conversational_looker_agent.ipynb`: Interactive chat demo.
+    *   `examples/looker_langchain_sql_agent_tests.ipynb`: Thorough tests of all components.
 
 ## Technical Details
 
@@ -95,9 +92,6 @@ Common issues and solutions are discussed in the [EXAMPLES_SETUP.md](./EXAMPLES_
 *   Correct path to the Looker JDBC driver JAR.
 *   Looker credentials and permissions for the SQL Interface.
 *   Python package import errors (ensure `pip install -e .` or package installation).
-
-## Contributing
-(Optional: Add guidelines if you plan to accept contributions)
 
 ## License
 This project is licensed under the Apache 2.0 License. See the [LICENSE](./LICENSE) file for details.
