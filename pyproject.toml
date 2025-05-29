@@ -42,5 +42,5 @@ dependencies = [
 [project.urls]
 Homepage = "https://github.com/rittmananalytics/looker-langchain-sql-agent" 
 Repository = "https://github.com/rittmananalytics/looker-langchain-sql-agent" 
-Bug Tracker = "https://github.com/rittmananalytics/looker-langchain-sql-agent/issues" 
-
+Issues = "https://github.com/rittmananalytics/looker-langchain-sql-agent/issues" 
+Repository = "https://github.com/rittmananalytics/langchain-looker-sql-agent.git"
