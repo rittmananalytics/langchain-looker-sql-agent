@@ -76,7 +76,7 @@ This repository includes detailed Jupyter Notebooks to demonstrate setup, testin
 ## Technical Details
 
 For a deeper dive into the implementation, JDBC interaction, specific Looker SQL syntax handled, and design choices (like why a custom `LookerSQLDatabase` wrapper was used over a new SQLAlchemy dialect), please refer to:
-*   **[TECHNICAL_DETAILS.md](./TECHNICAL_DETAILS.md)**
+*   **[TECHNICAL_DETAILS.md](https://github.com/rittmananalytics/langchain-looker-sql-agent/TECHNICAL_DETAILS.md)**
 
 ## Core Python Module
 
@@ -87,7 +87,7 @@ The main logic is encapsulated in the `langchain_looker_agent` package, primaril
 
 ## Troubleshooting
 
-Common issues and solutions are discussed in the [EXAMPLES_SETUP.md](./EXAMPLES_SETUP.md) and [TECHNICAL_DETAILS.md](./TECHNICAL_DETAILS.md). Key areas include:
+Common issues and solutions are discussed in the [EXAMPLES_SETUP.md](https://github.com/rittmananalytics/langchain-looker-sql-agent/EXAMPLES_SETUP.md) and [TECHNICAL_DETAILS.md](https://github.com/rittmananalytics/langchain-looker-sql-agent/TECHNICAL_DETAILS.md). Key areas include:
 *   `JAVA_HOME` configuration.
 *   Correct path to the Looker JDBC driver JAR.
 *   Looker credentials and permissions for the SQL Interface.
