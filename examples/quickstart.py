@@ -1,3 +1,13 @@
+!sudo apt-get update
+!sudo apt-get install -y openjdk-11-jdk --no-install-recommends
+!java -version # Verify installation
+!export JAVA_HOME=$(java -XshowSettings:properties -version 2>&1 > /dev/null | grep 'java.home' | awk '{print $3}')
+!echo $JAVA_HOME
+!mkdir drivers
+!cd drivers
+!wget https://github.com/looker-open-source/calcite-avatica/releases/download/avatica-1.26.0-looker/avatica-1.26.0-looker.jar
+!pip install langchain-looker-agent langchain-openai python-dotenv
+
 # examples/quickstart.py
 import os
 import logging
