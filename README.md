@@ -19,12 +19,28 @@ This project provides a Python package, `langchain-looker-agent`, that allows yo
 
 This example shows how to use the `langchain-looker-agent` library in your own Python project after installing it.
 
-1.  **Install the package:**
+1.  **Install Prerequisites**
+
     ```bash
-    pip install langchain-looker-agent 
+    sudo apt-get update
+    sudo apt-get install -y openjdk-11-jdk --no-install-recommends
+    java -version # Verify installation
+    export JAVA_HOME=$(java -XshowSettings:properties -version 2>&1 > /dev/null | grep 'java.home' | awk '{print $3}')
+    echo $JAVA_HOME
+    mkdir drivers
+    cd drivers
+    wget https://github.com/looker-open-source/calcite-avatica/releases/download/avatica-1.26.0-looker/avatica-1.26.0-looker.jar
+    pip install langchain-looker-agent langchain-openai python-dotenv
+
+    ```
+
+3.  **Install the package:**
+    ```bash
+    pip install langchain-looker-agent
+    
     ```
     
-2.  **Set Environment Variables:**
+4.  **Set Environment Variables:**
     Ensure the following are set in your environment or a `.env` file (see `.env.example`):
     *   `OPENAI_API_KEY` (or your chosen LLM's API key)
     *   `LOOKER_INSTANCE_URL` (e.g., `https://yourcompany.cloud.looker.com`)
@@ -34,7 +50,7 @@ This example shows how to use the `langchain-looker-agent` library in your own P
     *   `LOOKER_JDBC_DRIVER_PATH` (absolute path to your `avatica-...-looker.jar`)
     *   `JAVA_HOME` (pointing to your JRE/JDK root)
 
-3.  **Example Python Script:**
+5.  **Example Python Script:**
     ```python
     import os
     from dotenv import load_dotenv
