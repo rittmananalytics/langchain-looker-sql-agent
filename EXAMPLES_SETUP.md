@@ -95,7 +95,6 @@ Before you begin, ensure your system or development environment (e.g., local mac
 2.  **Navigate and Open Notebooks:**
     *   In the Jupyter interface, go into the `examples/` directory.
     *   **`looker_langchain_sql_agent_tests.ipynb`:** It's highly recommended to run this notebook first. It contains detailed setup cells (including Java/package checks that you can uncomment if needed for the notebook's specific kernel environment) and performs thorough manual tests of the `LookerSQLDatabase` component before creating and testing the full agent. This helps isolate any connection or basic setup issues.
-    *   **`01_conversational_looker_agent.ipynb`:** This notebook provides an interactive chat loop for a more free-form conversational experience with the Looker agent.
 
 3.  **Execute Cells:**
     *   Run the notebook cells sequentially.
