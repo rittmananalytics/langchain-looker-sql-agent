@@ -33,7 +33,7 @@ Before you can use the `langchain-looker-agent`, you'll need to ensure your envi
         ```bash
         sudo apt-get update && sudo apt-get install -y openjdk-11-jdk --no-install-recommends
         ```
-    *   **To install on other systems:** Follow the appropriate installation instructions for OpenJDK 11.
+    *   **To install on other systems:** Follow the appropriate installation instructions for OpenJDK 11 for your operating system.
     *   **Verify installation:** After installation, run `java -version` in your terminal. You should see output indicating OpenJDK version 11.x.x.
 
 2.  **Looker Avatica JDBC Driver:**
@@ -46,7 +46,7 @@ Before you can use the `langchain-looker-agent`, you'll need to ensure your envi
         # Download the JAR file into the drivers directory
         wget https://github.com/looker-open-source/calcite-avatica/releases/download/avatica-1.26.0-looker/avatica-1.26.0-looker.jar -P drivers/
         ```
-        Ensure this JAR file is accessible in your environment, typically by placing it in a `drivers/` subdirectory within your project or a location included in your Java classpath. The agent will expect to find this driver.
+        Ensure this JAR file is accessible in your environment, typically by placing it in a `drivers/` subdirectory within your project or another location included in your Java classpath. The agent will expect to find this driver.
 
 3.  **Python:**
     *   Python 3.8 or higher is recommended. You can check your Python version by running `python --version` or `python3 --version`.
@@ -61,14 +61,14 @@ Once the prerequisites are in place, you can install the `langchain-looker-agent
     pip install langchain-looker-agent langchain-openai python-dotenv
     ```
     *   `langchain-looker-agent`: This is the agent package itself.
-    *   `langchain-openai`: This package provides integration with OpenAI's language models (e.g., GPT-3.5, GPT-4). It's included by default as a common choice for the LLM powering the agent. If you plan to use a different LLM provider, you can replace `langchain-openai` with the relevant LangChain integration package (e.g., `langchain-anthropic` for Anthropic's Claude models, `langchain-google-genai` for Google's Gemini models).
+    *   `langchain-openai`: This package provides integration with OpenAI's language models (e.g., GPT-3.5, GPT-4). It's included by default as a common choice for the LLM powering the agent. If you plan to use a different LLM provider, you can replace `langchain-openai` with the relevant LangChain integration package (e.g., `langchain-anthropic` for Anthropic's Claude models, or `langchain-google-genai` for Google's Gemini models).
     *   `python-dotenv`: This utility helps manage environment variables, which is useful for securely storing API keys and configuration settings.
 
 2.  **Development Installation (from repository clone):**
     If you are working directly from a cloned copy of the `rittmananalytics/langchain-looker-sql-agent` GitHub repository, you might prefer an editable installation. After cloning the repository and navigating to its root directory:
     ```bash
     # It's recommended to set up a virtual environment first
-    # python -m venv .venv
+    # python3 -m venv .venv
     # source .venv/bin/activate
 
     pip install -e .
@@ -81,7 +81,7 @@ The `langchain-looker-agent` is configured primarily through environment variabl
 
 **Using a `.env` File:**
 
-It's highly recommended to use a `.env` file in the root of your project to store these environment variables. The `python-dotenv` package (installed as a dependency) will automatically load variables from this file when your application starts.
+It's highly recommended to use a `.env` file in the root of your project to store these environment variables. The `python-dotenv` package (installed as a dependency if you used `pip install langchain-looker-agent langchain-openai python-dotenv`) will automatically load variables from this file when your application starts.
 
 Create a file named `.env` in your project's root directory and add the following variables:
 
@@ -98,7 +98,7 @@ LOOKER_CLIENT_ID="your_looker_api_client_id"
 LOOKER_CLIENT_SECRET="your_looker_api_client_secret"
 
 # Path to Looker JDBC Driver
-LOOKER_JDBC_DRIVER_PATH="/path/to/your/drivers/avatica-1.26.0-looker.jar" # Replace with the actual path
+LOOKER_JDBC_DRIVER_PATH="/app/drivers/avatica-1.26.0-looker.jar" # Example: Replace with the actual path to your driver
 
 # Java Home (JDK/JRE path)
 JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64" # Example for Debian/Ubuntu, verify for your system
@@ -135,7 +135,7 @@ JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64" # Example for Debian/Ubuntu, veri
         ```bash
         java -XshowSettings:properties -version 2>&1 > /dev/null | grep 'java.home' | awk '{print $3}'
         ```
-        Common paths include `/usr/lib/jvm/java-11-openjdk-amd64`, `/opt/homebrew/opt/openjdk@11/libexec/openjdk.jdk/Contents/Home` (macOS with Homebrew), or similar.
+        Common paths include `/usr/lib/jvm/java-11-openjdk-amd64` (common on Linux) or `/opt/homebrew/opt/openjdk@11/libexec/openjdk.jdk/Contents/Home` (macOS with Homebrew).
     *   **On Windows:** This path is typically like `C:\Program Files\Java\jdk-11.x.x` or `C:\Program Files\AdoptOpenJDK\jdk-11.x.x-hotspot`.
     *   Ensure this variable points to the root of the JDK/JRE, not the `bin` subdirectory.
 
@@ -221,6 +221,7 @@ Here's how to set up and run the agent:
         toolkit=toolkit,
         verbose=True,       # Set to True to see the agent's thought process and generated SQL.
         top_k=10,           # Limits how many tables/Explores are considered for context. Adjust based on your model's complexity.
+        # agent_executor_kwargs={"handle_parsing_errors": True} # Optional: For more robust error handling
         # max_iterations=10 # Optional: Maximum number of steps the agent can take.
         # return_intermediate_steps=True # Optional: To get intermediate outputs
     )
@@ -239,18 +240,14 @@ Here's how to set up and run the agent:
     Choose a question relevant to your `lookml_model_name` and the Explores it contains.
 
 8.  **Invoke the Agent:**
-    Run the agent with your question. The `invoke` method is standard for LangChain Expression Language (LCEL) runnables. `chat_history` can be used to maintain conversational context, which will be discussed later. For a single query, an empty list is fine.
+    Run the agent with your question. The `invoke` method is standard for LangChain Expression Language (LCEL) runnables. `chat_history` should be provided if you are managing conversation history manually, though it's better handled by a memory object (see next section).
 
     ```python
-    # For agents that support chat history (like this one is designed to):
+    # For a single, non-conversational query:
     response = agent_executor.invoke({
         "input": question,
-        "chat_history": [] # Pass an empty list for no prior history, or a list of HumanMessage/AIMessage objects
+        "chat_history": [] # Provide an empty list if no prior conversation history
     })
-
-    # If the agent does not explicitly use chat_history in its prompt or structure,
-    # a simpler invoke might look like:
-    # response = agent_executor.invoke({"input": question})
     ```
 
 9.  **Extract and Print the Answer:**
@@ -258,36 +255,36 @@ Here's how to set up and run the agent:
 
     ```python
     answer = response.get('output')
-    print("\nQuestion:", question)
-    print("Answer:", answer)
+    print(f"\nQuestion: {question}")
+    print(f"Answer: {answer}")
     ```
 
 10. **Properly Close the Database Connection:**
     It's crucial to close the Looker JDBC connection when you're done to free up resources. A `try...finally` block ensures this happens even if errors occur.
 
     ```python
-    try:
-        # ... (all the steps from 1 to 9 above)
-        # Example:
-        # load_dotenv()
-        # llm = ChatOpenAI(model="gpt-4o", temperature=0)
-        # db = LookerSQLDatabase(...) # Initialize as shown in step 4
-        # toolkit = LookerSQLToolkit(db=db, llm=llm)
-        # agent_executor = create_looker_sql_agent(llm=llm, toolkit=toolkit, verbose=True, top_k=10)
-        # question = "How many orders were placed by users in California last quarter?"
-        # response = agent_executor.invoke({"input": question, "chat_history": []})
-        # answer = response.get('output')
-        # print("\nQuestion:", question)
-        # print("Answer:", answer)
-        pass # Your agent execution code would be here
-
-    finally:
-        if 'db' in locals() and db:
-            print("\nClosing Looker JDBC connection...")
-            db.close()
-            print("Connection closed.")
+    # Full example structure:
+    # (Imports and initializations from steps 1-6 would be here)
+    # db = None # Ensure db is defined in the outer scope for the finally block
+    # try:
+    #     (Steps 1-6: Imports, load_dotenv, LLM, LookerSQLDatabase, LookerSQLToolkit, create_looker_sql_agent)
+    #     db = LookerSQLDatabase(...) # Assign to db here
+    #     toolkit = LookerSQLToolkit(db=db, llm=llm)
+    #     agent_executor = create_looker_sql_agent(...)
+    #
+    #     question = "How many orders were placed by users in California last quarter?"
+    #     response = agent_executor.invoke({"input": question, "chat_history": []})
+    #     answer = response.get('output')
+    #     print(f"\nQuestion: {question}")
+    #     print(f"Answer: {answer}")
+    #
+    # finally:
+    #     if db: # Check if db was successfully initialized
+    #         print("\nClosing Looker JDBC connection...")
+    #         db.close()
+    #         print("Connection closed.")
     ```
-    This full example structure (from imports to closing the connection) should be placed in your Python script.
+    Place your complete script logic within the `try` block and the `db.close()` call in the `finally` block to ensure resources are managed correctly.
 
 This detailed walkthrough should help you get started with running natural language queries against your Looker instance using the `langchain-looker-agent`. Remember to replace placeholder values in your `.env` file and in the code with your actual configuration.
 
@@ -333,14 +330,15 @@ try:
     print(results)
 except Exception as e:
     print(f"Error executing direct SQL: {e}")
-finally:
-    # Remember to close the connection when all operations are done,
-    # typically at the end of your script or application lifecycle.
-    if 'db' in locals() and db: # Check if db was initialized
-        # db.close() # Uncomment if this is the end of your script
-        pass # In a larger script, you'd close it at the very end.
+# finally:
+#     # Remember to close the connection when all operations are done.
+#     # If 'db' was initialized in this specific block, you would close it here.
+#     # However, if 'db' is managed by a larger script structure (like the try/finally in the previous section),
+#     # avoid closing it prematurely here.
+#     # if 'db' in locals() and db:
+#     #     db.close()
 ```
-**Important Note on `db.close()`:** In this specific example, `db.close()` is commented out because you might perform other operations with `db` or the agent. The connection should be closed when your application or script finishes all Looker-related tasks, typically within a main `try...finally` block as shown in the previous section.
+**Important Note on `db.close()`:** The `db.close()` call should typically be managed at the end of your entire script or application lifecycle, as shown in the `try...finally` block in the "Using the Looker SQL Agent for Natural Language Queries" section. Avoid closing it after each `db.run()` if you intend to reuse the connection.
 
 **Looker Open SQL Interface Syntax:**
 
@@ -360,3 +358,266 @@ Any SQL query submitted directly using `db.run()` **must** conform to the Looker
     *   Refer to the official Looker documentation for the most up-to-date list of supported SQL functions and syntax for the Open SQL Interface.
 
 This direct execution capability is a powerful tool for advanced use cases but should be used with a clear understanding of Looker's SQL dialect and its semantic layer. For most end-user query needs, leveraging the natural language to SQL capabilities of the agent is recommended.
+
+# Understanding Agent's Operational Details
+
+For users interested in the mechanics behind the `langchain-looker-agent`, this section provides a summary of its key operational aspects, drawing from the technical details typically found in a `TECHNICAL_DETAILS.md` document for such a project.
+
+1.  **Core `LookerSQLDatabase` Class:**
+    *   This class is the heart of the Looker integration. It acts as a specialized wrapper around Looker's Open SQL Interface.
+    *   The connection is established using JDBC, facilitated by the `jaydebeapi` Python library, which in turn uses the downloaded Looker Avatica JDBC driver (`avatica-*-looker.jar`).
+    *   All operations are scoped to the specific LookML model name (`lookml_model_name`) you provide during its initialization. This means the agent will only "see" Explores and fields defined within that LookML model.
+
+2.  **Metadata Discovery for LLM Context:**
+    To enable the LLM to generate accurate Looker SQL, the agent first needs to understand the schema of your LookML model.
+    *   **Listing Explores (Tables):** It retrieves a list of available Explores within the specified `lookml_model_name` by calling `DatabaseMetaData.getTables()`. In this context, Looker Explores are treated conceptually as tables. The LookML model name is used as a schema pattern to filter these Explores.
+    *   **Fetching Field Information (Columns):** For each relevant Explore, it fetches detailed information about its dimensions and measures using `DatabaseMetaData.getColumns()`.
+    *   **Enriching Schema with Looker Metadata:** Crucially, the agent extracts Looker-specific metadata for each field. This includes:
+        *   `FIELD_LABEL`: The user-friendly label of the field from LookML.
+        *   `FIELD_DESCRIPTION`: The description of the field from LookML.
+        *   `FIELD_CATEGORY`: Indicates if the field is a `DIMENSION` or a `MEASURE`.
+        *   `HIDDEN`: A flag to determine if the field is hidden in Looker's UI.
+        This metadata is then formatted and appended to the standard column information, providing richer context to the LLM. For example, a field might be presented to the LLM like this:
+        ```sql
+        `order_items.total_sale_price` DECIMAL -- label: 'Total Sale Price'; category: MEASURE; description: 'The total sale price of the order item, calculated as quantity * sale_price.'
+        ```
+    *   **Filtering Hidden Fields:** Fields marked as `HIDDEN` in LookML are typically filtered out and not presented to the LLM, respecting your LookML design choices for field visibility.
+
+3.  **Prompt Engineering for Looker SQL Generation:**
+    The accuracy of the LLM's generated SQL heavily relies on carefully engineered prompts, especially the system prompt.
+    *   **System Instructions Template:** A specialized system prompt (often derived from a template like `LOOKER_SQL_SYSTEM_INSTRUCTIONS_TEMPLATE`) provides comprehensive instructions to the LLM.
+    *   **Key Instructions in the Prompt:**
+        *   **SQL Dialect:** Explicitly states that the SQL must adhere to the Apache Calcite dialect used by Looker's Open SQL Interface.
+        *   **Looker Data Structure:** Explains how Looker's structure maps to SQL concepts (LookML Model as a schema, Explore as a table, and `view_name.field_name` as the column identifier).
+        *   **Backtick Syntax:** Mandates the use of backticks (`` ` ``) for *all* identifiers (model names, Explore names, view names, field names). Examples: `` `your_model_name`.`your_explore_name` ``, `` `view_name.field_name` ``.
+        *   **Measure Aggregation:** Instructs the LLM to use `AGGREGATE(\`view_name.measure_name\`)` when referring to LookML measures, as direct aggregation functions (like `SUM()`, `AVG()`) on measures are not allowed.
+        *   **Restrictions:** Lists specific SQL features that are **not** allowed or are problematic with the Open SQL Interface, such as:
+            *   No explicit `JOIN` clauses (Looker handles joins based on LookML).
+            *   No subqueries or Common Table Expressions (CTEs).
+            *   No window functions.
+            *   No Data Manipulation Language (DML) statements (e.g., `INSERT`, `UPDATE`, `DELETE`).
+            *   No `SELECT *`.
+        *   **Query Termination:** Advises that generated SQL queries should not end with a semicolon.
+
+4.  **Query Execution Pre-processing:**
+    *   Before the `LookerSQLDatabase` class executes a SQL query received from the LLM, it typically performs some pre-processing. This might include stripping any trailing semicolons or removing markdown code fences (e.g., ```sql ... ```) that LLMs sometimes add around the generated SQL.
+
+5.  **Toolkit and Agent Assembly:**
+    *   The `LookerSQLToolkit` class bundles the `LookerSQLDatabase` interaction methods (like getting table/Explore descriptions, running SQL queries) into a set of "tools" that the LangChain agent can use.
+    *   The `create_looker_sql_agent` function then assembles these tools, the chosen LLM (e.g., `ChatOpenAI`), and the carefully crafted Looker-specific prompt into a ReAct (Reasoning and Acting) agent. This agent can then intelligently decide which tool to use (e.g., list Explores, get schema of an Explore, execute a query) based on the natural language input to fulfill the user's request.
+
+Understanding these operational details can help in troubleshooting, refining prompts (if customizing the agent), and appreciating the nuances of querying Looker's semantic layer through a natural language interface.
+
+# Conversational Usage with Memory
+
+The `langchain-looker-agent` can be used not just for single, standalone questions, but also for engaging in conversations about your data. This is achieved by incorporating memory, allowing the agent to remember previous turns in the conversation and use that context to answer follow-up questions more accurately.
+
+1.  **Introduction to Conversational Memory:**
+    When you ask a follow-up question like "And how many of those were for existing customers?", the agent needs to remember what "those" refers to from the previous interaction. Conversational memory enables this by storing and recalling the history of questions and answers.
+
+2.  **Importing `ConversationBufferMemory`:**
+    LangChain provides various memory types. A common one for this purpose is `ConversationBufferMemory`.
+
+    ```python
+    from langchain.memory import ConversationBufferMemory
+    ```
+
+3.  **Initializing `ConversationBufferMemory`:**
+    Create an instance of the memory.
+
+    ```python
+    memory = ConversationBufferMemory(
+        memory_key="chat_history", # This key must match the input variable used in the agent's prompt
+        return_messages=True       # Ensures the memory returns `HumanMessage` and `AIMessage` objects
+    )
+    ```
+    *   `memory_key="chat_history"`: The agent created by `create_looker_sql_agent` is typically configured to expect the conversation history under this specific key.
+    *   `return_messages=True`: This makes the memory store and return messages as LangChain message objects (e.g., `HumanMessage`, `AIMessage`), which is the expected format for conversational agents.
+
+4.  **Passing Memory to the Agent:**
+    When creating the agent executor, you pass the initialized `memory` object via the `agent_executor_kwargs` parameter.
+
+    ```python
+    # Assuming 'llm' and 'toolkit' (LookerSQLToolkit instance) are already initialized as per previous sections
+    # llm = ChatOpenAI(model="gpt-4o", temperature=0)
+    # # db = LookerSQLDatabase(...) # db would be part of the toolkit
+    # toolkit = LookerSQLToolkit(db=db, llm=llm) # 'db' needs to be defined before this line
+
+    agent_executor = create_looker_sql_agent(
+        llm=llm,
+        toolkit=toolkit, # Ensure 'toolkit' is defined, incorporating 'db' and 'llm'
+        verbose=True,  # Recommended for observing memory effects during conversation
+        top_k=10,      # As discussed previously
+        agent_executor_kwargs={
+            "memory": memory,
+            "handle_parsing_errors": True, # Good practice to handle LLM output parsing issues
+            "max_iterations": 7            # Example: limit the number of steps the agent can take
+        }
+    )
+    ```
+    Setting `handle_parsing_errors=True` can make the agent more robust if the LLM occasionally produces output that's hard to parse.
+
+5.  **Example of a Multi-Turn Conversation:**
+    Now, you can interact with the `agent_executor` over multiple turns. The memory object will automatically manage the `chat_history`.
+
+    ```python
+    # Ensure 'agent_executor' is initialized with memory as shown above.
+    # The 'db' (LookerSQLDatabase instance) should be initialized and part of the toolkit passed to the agent.
+
+    # Full setup for this example (assuming it's a standalone script):
+    # import os
+    # from dotenv import load_dotenv
+    # from langchain_openai import ChatOpenAI
+    # from langchain_looker import LookerSQLDatabase, LookerSQLToolkit, create_looker_sql_agent
+    # from langchain.memory import ConversationBufferMemory
+    #
+    # load_dotenv()
+    #
+    # llm = ChatOpenAI(model="gpt-4o",temperature=0)
+    # db = LookerSQLDatabase(
+    #     looker_instance_url=os.environ["LOOKER_INSTANCE_URL"],
+    #     lookml_model_name=os.environ["LOOKML_MODEL_NAME"],
+    #     client_id=os.environ["LOOKER_CLIENT_ID"],
+    #     client_secret=os.environ["LOOKER_CLIENT_SECRET"],
+    #     jdbc_driver_path=os.environ["LOOKER_JDBC_DRIVER_PATH"],
+    #     sample_rows_in_table_info=0 # Set to 0 for this example to reduce noise
+    # )
+    # toolkit = LookerSQLToolkit(db=db, llm=llm)
+    # memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+    # agent_executor = create_looker_sql_agent(
+    #     llm=llm, toolkit=toolkit, verbose=True, top_k=10,
+    #     agent_executor_kwargs={"memory": memory, "handle_parsing_errors": True, "max_iterations": 7}
+    # )
+    # # End of full setup example for context
+
+    # db_connection_managed_globally = db # Assuming 'db' is the globally managed connection from prior setup.
+    try:
+        # Initial question
+        # IMPORTANT: Replace 'your_actual_explore_name' with a valid Explore from your LookML model.
+        # The fields used (orders, customer status, order value) are illustrative. Adapt to your model.
+        question1 = "How many total orders were there last month in the `your_actual_explore_name` Explore?"
+        print(f"Q1: {question1}")
+        response1 = agent_executor.invoke({"input": question1}) # chat_history is implicitly handled by memory
+        print(f"A1: {response1.get('output')}\n")
+
+        # Follow-up question
+        question2 = "And how many of those were from new customers?" # Assumes your model has a way to identify 'new customers'
+        print(f"Q2: {question2}")
+        response2 = agent_executor.invoke({"input": question2})
+        print(f"A2: {response2.get('output')}\n")
+
+        # Another follow-up
+        question3 = "What was the average order value for them?" # 'them' refers to new customers from Q2
+        print(f"Q3: {question3}")
+        response3 = agent_executor.invoke({"input": question3})
+        print(f"A3: {response3.get('output')}\n")
+
+        # Optionally, inspect the memory content (for debugging or understanding)
+        # This shows how the conversation is stored.
+        # print("--- Memory content ---")
+        # print(memory.load_memory_variables({})) # Example of how to inspect memory
+        # print("----------------------")
+
+    except Exception as e:
+        print(f"An error occurred during the conversation: {e}")
+    # finally:
+    #     # The 'db.close()' should be handled at the very end of the application's lifecycle,
+    #     # not necessarily after each conversational block if the agent/db is intended to be reused.
+    #     # Refer to the main try/finally structure in the "Using the Looker SQL Agent" section.
+    #     if 'db_connection_managed_globally' in locals() and db_connection_managed_globally:
+    #         print("\nClosing Looker JDBC connection (if this is the end of all operations)...")
+    #         db_connection_managed_globally.close()
+    #         print("Connection closed.")
+    ```
+    **Important Note on Example Questions:** The questions above (`"How many total orders..."`, `"And how many of those were from new customers?"`, `"What was the average order value for them?"`) and the Explore name `` `your_actual_explore_name` `` are illustrative. You **must** adapt these to use valid Explore names, dimensions, and measures from *your specific LookML model* for the queries to work. The example demonstrates the conversational flow, not the universal applicability of these exact English phrases to every LookML model.
+
+6.  **Implicit `chat_history` Handling:**
+    When you initialize the agent with a memory object, you no longer need to manually pass the `chat_history` in the `invoke` call's dictionary (unless you want to override or inject specific history for a single call, which is an advanced use case). The `ConversationBufferMemory` automatically captures the user's input and the agent's output, and provides this history to the agent for subsequent calls.
+
+By using memory, you can create much more natural and powerful interactions with your Looker data, allowing users to drill down, ask clarifying questions, and explore data contextually.
+
+# Best Practices and Troubleshooting
+
+This section provides tips for getting the most out of the `langchain-looker-agent` and guidance on how to address common issues.
+
+## Best Practices
+
+1.  **Understand Your LookML Model:**
+    *   The agent's effectiveness is tied to the clarity and structure of the LookML model.
+    *   Knowing available Explores, dimensions (and their types: `time`, `string`, `number`, etc.), and measures is key for phrasing effective questions. Use exact names, including view names (e.g., `orders.created_date`, `users.city`).
+
+2.  **Craft Clear and Specific Questions:**
+    *   Be explicit about entities (Explores/views), metrics (measures or aggregatable dimensions), timeframes, and filters.
+    *   Avoid ambiguity. Instead of "Show sales," try "What were the total sales amount from the `order_items` Explore for the last completed quarter, broken down by product category?"
+    *   Using terms that align with your LookML field labels or descriptions can improve accuracy.
+
+3.  **Iterate on Queries:**
+    *   If the first answer isn't perfect, refine the question or ask follow-up questions, especially when using conversational memory.
+    *   Break down complex requests into smaller, sequential questions.
+
+4.  **Leverage `top_k` for Context Management:**
+    *   The `top_k` parameter in `create_looker_sql_agent` (e.g., `top_k=10`) limits the number of Explores (tables) considered by the LLM.
+    *   Adjust based on your model's complexity. A smaller `top_k` might focus the LLM but could miss relevant Explores if they aren't highly ranked by the retriever.
+
+5.  **Use `verbose=True` for Debugging:**
+    *   Setting `verbose=True` when calling `create_looker_sql_agent` (or for the toolkit/database) provides detailed output of the agent's thoughts, the generated SQL, and intermediate steps. This is invaluable for debugging.
+
+6.  **Specify `lookml_model_name` Correctly:**
+    *   Ensure the `lookml_model_name` environment variable (and thus passed to `LookerSQLDatabase`) exactly matches a model name in your Looker instance that the API user has access to. This scopes the agent's view of available Explores.
+
+## Troubleshooting
+
+1.  **Java and JDBC Driver Issues:**
+    *   **`JAVA_HOME` Not Set or Incorrect:**
+        *   **Symptom:** Errors related to finding Java, `jaydebeapi` connection failures.
+        *   **Solution:** Verify `JAVA_HOME` is set correctly and points to the OpenJDK 11 root, not its `bin` directory.
+    *   **`LOOKER_JDBC_DRIVER_PATH` Incorrect:**
+        *   **Symptom:** "Class not found: com.looker.lookerjdbc.LookerDriver" or similar `jaydebeapi` errors.
+        *   **Solution:** Ensure `LOOKER_JDBC_DRIVER_PATH` is an absolute or correctly resolved relative path to the `avatica-*-looker.jar` file.
+    *   **Driver/JDK Version Mismatch:**
+        *   **Symptom:** Unexpected connection errors.
+        *   **Solution:** Ensure you are using OpenJDK 11.
+
+2.  **Authentication and Permissions:**
+    *   **Invalid Looker API Client ID/Secret:**
+        *   **Symptom:** Authentication failed, 401/403 errors during connection (check Looker logs or `jaydebeapi` errors).
+        *   **Solution:** Double-check `LOOKER_CLIENT_ID` and `LOOKER_CLIENT_SECRET`.
+    *   **Insufficient API User Permissions:**
+        *   **Symptom:** Agent connects but sees no Explores, or queries fail with permission errors.
+        *   **Solution:** The Looker API user must have access to the specified `LOOKML_MODEL_NAME`, permissions for the Open SQL Interface (JDBC), access to underlying database connections, and `see_lookml` or `explore` permissions for relevant models/Explores.
+
+3.  **Looker SQL Syntax Errors (from LLM or Manual Query):**
+    *   **Missing Backticks:**
+        *   **Symptom:** SQL errors like "Table not found," "Column not found."
+        *   **Solution:** All Looker SQL identifiers (model, explore, `view.field`) require backticks: `` `model_name`.`explore_name` ``, `` `orders.order_id` ``.
+    *   **Incorrect Measure Aggregation:**
+        *   **Symptom:** Errors like "Cannot aggregate a non-measure field."
+        *   **Solution:** LookML measures must be wrapped with `AGGREGATE(\`view_name.measure_name\`)`. Dimensions should not be. Standard SQL aggregates (`SUM`, `AVG`) apply to dimensions for custom aggregations.
+    *   **Using Unsupported SQL Features:**
+        *   **Symptom:** SQL validation errors from Looker.
+        *   **Solution:** Looker's Open SQL Interface (Calcite) doesn't support explicit `JOIN`s, most complex subqueries, or window functions.
+
+4.  **Mandatory LookML Filters (`always_filter`, `conditionally_filter`):**
+    *   **Symptom:** Queries fail (possibly with missing filter errors) or return no data.
+    *   **Solution:** If an Explore has mandatory filters, the LLM must be guided to include these in `WHERE` or `HAVING` clauses. This may require more specific questions (e.g., "Show sales for `orders` Explore *for last month*") or using Explores without such strict filters.
+
+5.  **Agent Errors and LLM Issues:**
+    *   **Iteration/Time Limits:**
+        *   **Symptom:** "Agent stopped due to iteration limit or time limit."
+        *   **Solution:** Increase `max_iterations` in `agent_executor_kwargs` for complex queries.
+    *   **Parsing Errors / Invalid Format:**
+        *   **Symptom:** "Invalid Format: Missing 'Action:' after 'Thought:'".
+        *   **Solution:** LLM confusion. Rephrase the question, be more specific, or ensure `handle_parsing_errors=True` in `agent_executor_kwargs`. Consider different LLM/temperature.
+    *   **LLM API Key Issues:**
+        *   **Symptom:** LLM provider authentication errors (e.g., OpenAI API key invalid, quota exceeded).
+        *   **Solution:** Check your LLM API key and account status.
+
+6.  **No Explores Found / Empty Schema:**
+    *   **Symptom:** Agent reports no tables/Explores, or schema fetching is empty.
+    *   **Solution:** Verify `LOOKML_MODEL_NAME` is exact. Ensure API user access to this model and its Explores. Check Looker project deployment and model configuration.
+
+7.  **Query Performance:**
+    *   **Symptom:** Queries are very slow.
+    *   **Solution:** Performance depends on Looker, the database, query complexity, and data volume. Optimize LookML, check database performance, or simplify queries. The agent is best for interactive exploration.
+
+[end of langchain_looker_sql_agent_guide.md]
